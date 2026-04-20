@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  Прив
+  Привет кд чд 
 </template>
 
 <style scoped></style>
