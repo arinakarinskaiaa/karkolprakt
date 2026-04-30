@@ -8,9 +8,21 @@ const { products } = useProducts()
 
 const selectedProduct = ref("")
 const grams = ref("")
+const gramsError = ref("")
 
 function addToDiary() {
     if (!selectedProduct.value || !grams.value) return
+
+    if (!grams.value) {
+        gramsError.value = "Введите количество граммов"
+        return
+    }
+
+    const num = Number(grams.value)
+    if (isNaN(num) || num <= 0) {
+        gramsError.value = "Введите корректное число (только цифры)"
+        return
+    }
 
     currentUser.value.diary.push({
         id: Date.now(),
@@ -48,9 +60,11 @@ const totalCalories = computed(() => {
             </option>
         </select>
 
-        <input v-model="grams" placeholder="Граммы" />
+        <input v-model="grams" type="number" min="0" placeholder="Граммы" @input="gramsError = ''" />
 
         <button @click="addToDiary">Добавить</button>
+
+        <p v-if="gramsError" class="error">{{ gramsError }}</p>
     </div>
 
     <h2>Сегодня</h2>

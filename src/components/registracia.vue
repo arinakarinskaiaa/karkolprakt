@@ -22,4 +22,9 @@ function submit() {
     <input v-model="password" placeholder="Пароль" type="password" />
 
     <button @click="submit">Зарегистрироваться</button>
+
+     <p>
+        Есть аккаунт?
+        <router-link to="/login">Войти</router-link>
+    </p>
 </template>
