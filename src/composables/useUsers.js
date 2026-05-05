@@ -39,6 +39,11 @@ function logout() {
 }
 
 function saveCurrentUser() {
+    const index = users.value.findIndex(u => u.id === currentUser.value.id)
+    if (index !== -1) {
+        users.value[index] = currentUser.value
+    }
+
     localStorage.setItem("currentUser", JSON.stringify(currentUser.value))
     saveUsers()
 }

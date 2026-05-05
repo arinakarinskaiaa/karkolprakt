@@ -22,14 +22,7 @@ function add() {
     <h1>Продукты</h1>
 
     <input v-model="name" placeholder="Название" />
-    <input
-      v-model="calories"
-      type="number"
-      min="0"
-      step="1"
-      placeholder="Калории (ккал)"
-      @input="caloriesError = ''"
-    />
+    <input v-model="calories" type="number" min="0" step="1" placeholder="Калории (ккал)" @input="caloriesError = ''" />
 
     <button @click="add">Добавить</button>
 
