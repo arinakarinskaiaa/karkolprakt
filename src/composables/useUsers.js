@@ -12,7 +12,8 @@ function register(login, password) {
         id: Date.now(),
         login,
         password,
-        diary: []
+        diary: [],
+        water: []
     }
 
     users.value.push(user)

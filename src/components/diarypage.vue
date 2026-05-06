@@ -2,6 +2,7 @@
 import { ref, computed, watch } from "vue"
 import useUsers from "../composables/useUsers"
 import { useProducts } from "../composables/useProducts"
+import WaterTracker from "./water.vue"
 
 const { currentUser, saveCurrentUser } = useUsers()
 const { products, filteredProducts, searchQuery } = useProducts()
@@ -11,6 +12,8 @@ const grams = ref("")
 const gramsError = ref("")
 const showDropdown = ref(false)
 
+const selectedCategory = ref("breakfast")
+
 watch(searchQuery, () => {
     showDropdown.value = searchQuery.value.length > 0 && filteredProducts.value.length > 0
 })
@@ -19,6 +22,12 @@ function selectProduct(product) {
     selectedProduct.value = product.id
     searchQuery.value = product.name
     showDropdown.value = false
+}
+
+function hideDropdownWithDelay() {
+  setTimeout(() => {
+    showDropdown.value = false
+  }, 200)
 }
 
 function addToDiary() {
@@ -42,7 +51,8 @@ function addToDiary() {
         id: Date.now(),
         productId: selectedProduct.value,
         grams: num,
-        date: today
+        date: today,
+        category: selectedCategory.value
     })
 
     saveCurrentUser()
@@ -56,6 +66,30 @@ const today = new Date().toISOString().slice(0, 10)
 
 const todayList = computed(() => {
     return currentUser.value?.diary?.filter(i => i.date === today) || []
+})
+
+const groupedItems = computed(() => {
+    const groups = {
+        breakfast: [],
+        lunch: [],
+        dinner: [],
+        snack: []
+    }
+
+    const labels = {
+        breakfast: 'Завтрак',
+        lunch: 'Обед',
+        dinner: 'Ужин',
+        snack: 'Перекус'
+    }
+
+    todayList.value.forEach(item => {
+        const cat = item.category || 'snack'
+        if (!groups[cat]) groups[cat] = []
+        groups[cat].push(item)
+    })
+
+    return { groups, labels }
 })
 
 const totalCalories = computed(() => {
@@ -74,7 +108,7 @@ const totalCalories = computed(() => {
         <!-- Поиск с выпадающим списком -->
         <div class="search-container">
             <input v-model="searchQuery" placeholder="Поиск продукта..." class="search-input"
-                @focus="showDropdown = searchQuery.length > 0" @blur="setTimeout(() => showDropdown = false, 200)" />
+                @focus="showDropdown = searchQuery.length > 0" @blur="hideDropdownWithDelay" />
 
             <ul v-if="showDropdown" class="dropdown-list">
                 <li v-if="filteredProducts.length === 0" class="no-results">
@@ -86,17 +120,39 @@ const totalCalories = computed(() => {
             </ul>
         </div>
 
-        <input v-model="grams" type="number" min="0" placeholder="Граммы" @input="gramsError = ''" /><button
-            @click="addToDiary">Добавить</button>
+        <div class="form-row">
+            <input v-model="grams" type="number" min="0" placeholder="Граммы" @input="gramsError = ''" />
+
+            <select v-model="selectedCategory">
+                <option value="breakfast">Завтрак</option>
+                <option value="lunch">Обед</option>
+                <option value="dinner">Ужин</option>
+                <option value="snack">Перекус</option>
+            </select>
+        </div>
+
+        <button @click="addToDiary">Добавить</button>
         <p>Не нашли подходящий продукт? <router-link to="/products">Добавьте свой</router-link></p>
         <p v-if="gramsError" class="error"> {{ gramsError }}</p>
     </div>
-    <h2>Сегодня — {{ new Date().toLocaleDateString('ru-RU') }}</h2>
-    <div v-for="item in todayList" :key="item.id" class="diary-item"><span> {{products.find(p =>
-        p.id == item.productId)?.name}}</span>
-        <span> {{ item.grams }} г</span>
-    </div>
-    <h3>Калории: {{ totalCalories.toFixed(0) }}ккал</h3>
+
+
+        <div v-for="(items, key) in groupedItems.groups" :key="key">
+            <div v-if="items.length > 0" class="category-section">
+                <h3>{{ groupedItems.labels[key] }}</h3>
+                <div v-for="item in items" :key="item.id" class="diary-item">
+                    <span>{{products.find(p => p.id == item.productId)?.name}}</span>
+                    <span>{{ item.grams }} г</span>
+                </div>
+            </div>
+        </div>
+
+        <h2>Сегодня — {{ new Date().toLocaleDateString('ru-RU') }}</h2>
+        <!-- <div v-for="item in todayList" :key="item.id" class="diary-item"><span> {{products.find(p =>
+            p.id == item.productId)?.name}}</span>
+            <span> {{ item.grams }} г</span>
+        </div> -->
+        <h3>Калории: {{ totalCalories.toFixed(0) }}ккал</h3>
 </template>
 <style scoped>
 .add-form {
@@ -155,6 +211,14 @@ const totalCalories = computed(() => {
     color: #2e8b57;
 }
 
+.form-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+
 input[type="number"] {
     padding: 12px;
     width: 100%;
@@ -186,9 +250,25 @@ button:hover {
     margin-top: 5px;
 }
 
-h2,
+.categories {
+    margin-top: 20px;
+}
+
+.category-section {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+
+/* h2,
 h3 {
     color: #2e8b57;
+} */
+
+.category-section h3 {
+    color: #2e8b57;
+    margin-bottom: 10px;
+    font-size: 18px;
 }
 
 .diary-item {

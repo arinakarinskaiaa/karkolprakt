@@ -7,6 +7,8 @@ import diary from './components/diarypage.vue'
 import productspage from './components/productspage.vue'
 import profile from './components/profile.vue'
 import historypage from './components/historypage.vue'
+import water from './components/water.vue'
+import nonepage from './components/nonepage.vue'
 
 import useUsers from './composables/useUsers'
 
@@ -19,7 +21,10 @@ const routes = [
     { path: '/diary', name: 'diary', component: diary, meta: { auth: true } },
     { path: '/products', name: 'products', component: productspage, meta: { auth: true } },
     { path: '/profile', name: 'profile', component: profile, meta: { auth: true } },
-    { path: '/history', name: 'history', component: historypage, meta: { auth: true } }
+    { path: '/history', name: 'history', component: historypage, meta: { auth: true } },
+    { path: '/water', name: 'water', component: water, meta: { auth: true } },
+
+    {path: "/:pathname(.*)", name:'nonepage', component:nonepage}
 ]
 
 const router = createRouter({

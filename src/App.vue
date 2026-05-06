@@ -21,6 +21,7 @@ function handleLogout() {
           <RouterLink :to="{ name: 'diary' }">📝 Дневник питания</RouterLink>
           <RouterLink :to="{ name: 'products' }">🥦 Продукты</RouterLink>
           <RouterLink :to="{ name: 'history' }">📅 История</RouterLink>
+          <RouterLink :to="{ name: 'water' }">💧 Водный баланс</RouterLink>
 
         </div>
         <div class="nav-right">

@@ -28,7 +28,7 @@ function add() {
 
 <template>
     <div class="products-page">
-        <h1>База продуктов</h1>
+        <h1>Список продуктов</h1>
 
         <!-- Форма добавления -->
         <div class="add-form">
