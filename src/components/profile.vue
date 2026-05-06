@@ -7,7 +7,6 @@ const { currentUser, saveCurrentUser } = useUsers()
 const isEdit = ref(false)
 const showPass = ref(false)
 
-// Поля формы
 const loginval = ref(currentUser.value?.login || '')
 const password = ref(currentUser.value?.password || '')
 const errlogin = ref('')

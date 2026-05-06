@@ -2,6 +2,7 @@
 import { RouterLink, RouterView } from 'vue-router'
 import useUsers from './composables/useUsers'
 import { useRouter } from 'vue-router'
+
 const router = useRouter()
 const { currentUser, logout } = useUsers()
 
@@ -13,18 +14,17 @@ function handleLogout() {
 
 <template>
   <div class="app-container">
-    <!-- Навигация показывается ТОЛЬКО если пользователь вошёл -->
+    <!-- Шапка -->
     <header v-if="currentUser" class="main-header">
       <nav class="nav">
-        <!-- Левые/центральные ссылки -->
         <div class="nav-links">
-          <RouterLink to="/diary">📝 Дневник питания</RouterLink>
-          <RouterLink to="/products">🥦 Продукты</RouterLink>
-        </div>
+          <RouterLink :to="{ name: 'diary' }">📝 Дневник питания</RouterLink>
+          <RouterLink :to="{ name: 'products' }">🥦 Продукты</RouterLink>
+          <RouterLink :to="{ name: 'history' }">📅 История</RouterLink>
 
-        <!-- Правые ссылки (Профиль и Выйти) -->
+        </div>
         <div class="nav-right">
-          <RouterLink to="/profile">👤 Профиль</RouterLink>
+          <RouterLink :to="{ name: 'profile' }">👤 Профиль</RouterLink>
           <a href="#" @click.prevent="handleLogout" class="logout-link">🚪 Выйти</a>
         </div>
       </nav>
@@ -35,7 +35,7 @@ function handleLogout() {
       <RouterView />
     </main>
 
-    <!-- Подвал всегда -->
+    <!-- Подвал -->
     <footer class="footer">
       &copy; 2025 FoodDiary. Следи за питанием!
     </footer>
@@ -47,39 +47,34 @@ function handleLogout() {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background: #f9f9f9;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .main-header {
-  background-color: #30ae25;
+  background-color: #2e8b57;
   color: white;
-  padding: 10px 20px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 20px;
-  font-size: 1.1rem;
-}
-
-.nav-links {
-  display: flex;
-  gap: 20px;
-}
-
-.nav-right {
-  display: flex;
-  gap: 15px;
+  padding: 0 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  height: 60px;
 }
 
 .nav a {
   color: white;
   text-decoration: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  transition: background 0.3s;
+  font-weight: 500;
+  font-size: 15px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: 0.3s;
 }
 
 .nav a:hover {
@@ -88,23 +83,14 @@ function handleLogout() {
 
 .nav a.router-link-exact-active {
   background: white;
-  color: #30ae25;
+  color: #2e8b57;
   font-weight: bold;
-}
-
-.logout-link {
-  background: #e60000 !important;
-  font-weight: bold;
-}
-
-.logout-link:hover {
-  background: #cc0000 !important;
 }
 
 .main-content {
   flex: 1;
   padding: 20px;
-  max-width: 900px;
+  max-width: 1200px;
   margin: 0 auto;
   width: 100%;
 }

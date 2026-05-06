@@ -52,8 +52,8 @@ function addProduct(name, calories) {
 export function useProducts() {
     return {
         products,
-        filteredProducts,  // ← используйте в UI
-        searchQuery,       // ← привяжите к input
+        filteredProducts,
+        searchQuery,
         addProduct
     }
 }
