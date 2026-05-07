@@ -2,7 +2,6 @@
 import { ref, computed, watch } from "vue"
 import useUsers from "../composables/useUsers"
 import { useProducts } from "../composables/useProducts"
-import WaterTracker from "./water.vue"
 
 const { currentUser, saveCurrentUser } = useUsers()
 const { products, filteredProducts, searchQuery } = useProducts()
@@ -25,9 +24,9 @@ function selectProduct(product) {
 }
 
 function hideDropdownWithDelay() {
-  setTimeout(() => {
-    showDropdown.value = false
-  }, 200)
+    setTimeout(() => {
+        showDropdown.value = false
+    }, 200)
 }
 
 function addToDiary() {
@@ -98,22 +97,19 @@ const totalCalories = computed(() => {
         return sum + (product?.calories || 0) * item.grams / 100
     }, 0)
 })
-
 </script>
 
 <template>
     <h1>Дневник питания</h1>
 
+    <!-- Форма добавления -->
     <div class="add-form">
-        <!-- Поиск с выпадающим списком -->
         <div class="search-container">
             <input v-model="searchQuery" placeholder="Поиск продукта..." class="search-input"
                 @focus="showDropdown = searchQuery.length > 0" @blur="hideDropdownWithDelay" />
 
             <ul v-if="showDropdown" class="dropdown-list">
-                <li v-if="filteredProducts.length === 0" class="no-results">
-                    Ничего не найдено
-                </li>
+                <li v-if="filteredProducts.length === 0" class="no-results">Ничего не найдено</li>
                 <li v-for="p in filteredProducts" :key="p.id" @click="selectProduct(p)">
                     {{ p.name }} ({{ p.calories }} ккал)
                 </li>
@@ -121,58 +117,82 @@ const totalCalories = computed(() => {
         </div>
 
         <div class="form-row">
-            <input v-model="grams" type="number" min="0" placeholder="Граммы" @input="gramsError = ''" />
+            <div class="input-group">
+                <label>Граммы</label>
+                <input v-model="grams" type="number" min="0" placeholder="Введите количество"
+                    @input="gramsError = ''" />
+            </div>
 
-            <select v-model="selectedCategory">
-                <option value="breakfast">Завтрак</option>
-                <option value="lunch">Обед</option>
-                <option value="dinner">Ужин</option>
-                <option value="snack">Перекус</option>
-            </select>
+            <div class="input-group">
+                <label>Приём пищи</label>
+                <select v-model="selectedCategory">
+                    <option value="breakfast">Завтрак</option>
+                    <option value="lunch">Обед</option>
+                    <option value="dinner">Ужин</option>
+                    <option value="snack">Перекус</option>
+                </select>
+            </div>
+        </div>
+        <div class="quick-links">
+            <router-link class="link" :to="{ name: 'water' }">💧 Добавить воду</router-link>
+
         </div>
 
-        <button @click="addToDiary">Добавить</button>
-        <p>Не нашли подходящий продукт? <router-link to="/products">Добавьте свой</router-link></p>
-        <p v-if="gramsError" class="error"> {{ gramsError }}</p>
+        <button @click="addToDiary">Добавить в дневник</button>
+
+        <p class="hint">
+            Не нашли продукт? <router-link to="/products">Добавьте свой</router-link>
+        </p>
+        <p v-if="gramsError" class="error">{{ gramsError }}</p>
+    </div>
+
+    <h2>Сегодня — {{ new Date().toLocaleDateString('ru-RU') }}</h2>
+    <div class="quick-links">
+        <router-link class="link" :to="{ name: 'history' }">📅 Посмотреть историю</router-link>
+
+
     </div>
 
 
-        <div v-for="(items, key) in groupedItems.groups" :key="key">
-            <div v-if="items.length > 0" class="category-section">
-                <h3>{{ groupedItems.labels[key] }}</h3>
-                <div v-for="item in items" :key="item.id" class="diary-item">
-                    <span>{{products.find(p => p.id == item.productId)?.name}}</span>
-                    <span>{{ item.grams }} г</span>
-                </div>
+    <div v-for="(items, key) in groupedItems.groups" :key="key">
+        <div v-if="items.length > 0" class="category-section">
+            <h3>{{ groupedItems.labels[key] }}</h3>
+            <div v-for="item in items" :key="item.id" class="diary-item">
+                <span>{{products.find(p => p.id == item.productId)?.name}}</span>
+                <span>{{ item.grams }} г</span>
             </div>
         </div>
+    </div>
 
-        <h2>Сегодня — {{ new Date().toLocaleDateString('ru-RU') }}</h2>
-        <!-- <div v-for="item in todayList" :key="item.id" class="diary-item"><span> {{products.find(p =>
-            p.id == item.productId)?.name}}</span>
-            <span> {{ item.grams }} г</span>
-        </div> -->
-        <h3>Калории: {{ totalCalories.toFixed(0) }}ккал</h3>
+
+    <h3>Калории: {{ totalCalories.toFixed(0) }} ккал</h3>
 </template>
 <style scoped>
 .add-form {
-    margin-bottom: 30px;
-    position: relative;
+    max-width: 500px;
+    margin: 0 auto 30px;
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid #eee;
 }
+
 
 .search-container {
     position: relative;
-    margin-bottom: 10px;
+    margin-bottom: 16px;
 }
 
 .search-input {
     width: 100%;
-    max-width: 400px;
     padding: 12px;
     font-size: 16px;
     border: 2px solid #2e8b57;
     border-radius: 8px;
     outline: none;
+    background: white;
+    transition: border-color 0.3s;
 }
 
 .search-input:focus {
@@ -185,7 +205,6 @@ const totalCalories = computed(() => {
     top: 100%;
     left: 0;
     width: 100%;
-    max-width: 400px;
     background: white;
     border: 1px solid #ddd;
     border-top: none;
@@ -211,75 +230,169 @@ const totalCalories = computed(() => {
     color: #2e8b57;
 }
 
+.no-results {
+    text-align: center;
+    color: #888;
+    font-style: italic;
+    padding: 10px;
+}
+
 .form-row {
     display: flex;
-    gap: 10px;
-    align-items: center;
-    margin-bottom: 10px;
+    gap: 16px;
+    margin-bottom: 16px;
     flex-wrap: wrap;
 }
 
-input[type="number"] {
-    padding: 12px;
+.input-group {
+    flex: 1;
+    min-width: 140px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+
+.input-group input,
+.input-group select {
     width: 100%;
-    max-width: 400px;
-    border: 2px solid #ccc;
+    padding: 12px;
+    border: 2px solid #2e8b57;
     border-radius: 8px;
-    margin: 8px 0;
+    font-size: 16px;
+    outline: none;
+    background: white;
+    transition: border-color 0.3s;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+    border-color: #2e8b57;
+    box-shadow: 0 0 0 3px rgba(46, 139, 87, 0.2);
 }
 
 button {
-    padding: 12px 24px;
+    width: 100%;
+    padding: 12px;
     background: #2e8b57;
     color: white;
     border: none;
     border-radius: 8px;
-    cursor: pointer;
     font-size: 16px;
-    transition: 0.3s;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
 }
 
 button:hover {
     background: #267c4a;
     transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .error {
     color: #e60000;
     font-size: 0.9rem;
     margin-top: 5px;
+    text-align: left;
 }
 
-.categories {
+.hint {
+    text-align: center;
+    font-size: 14px;
+    color: #555;
+    margin: 10px 0 0;
+}
+
+.hint a {
+    color: #2e8b57;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.hint a:hover {
+    text-decoration: underline;
+}
+
+.quick-links {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+}
+
+.link {
+    color: #2e8b57;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 14px;
+    border-bottom: 1px dashed #2e8b57;
+    padding-bottom: 2px;
+    transition: all 0.3s ease;
+}
+
+.link:hover {
+    color: #267c4a;
+    border-bottom: 1px solid #267c4a;
+    transform: translateY(-1px);
+}
+
+h1 {
+    text-align: center;
+    color: #2e8b57;
+    margin-bottom: 20px;
+    font-size: 2rem;
+}
+
+h2 {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #555;
+    margin: 20px 0;
+}
+
+h3 {
+    text-align: center;
+    color: #2e8b57;
+    font-size: 1.3rem;
     margin-top: 20px;
 }
 
 .category-section {
-    margin-bottom: 20px;
+    max-width: 500px;
+    margin: 30px auto 20px;
     text-align: left;
 }
-
-
-/* h2,
-h3 {
-    color: #2e8b57;
-} */
 
 .category-section h3 {
     color: #2e8b57;
     margin-bottom: 10px;
-    font-size: 18px;
+    font-size: 1.3rem;
+    border-bottom: 2px solid #f0f8f0;
+    padding-bottom: 4px;
 }
 
 .diary-item {
     display: flex;
     justify-content: space-between;
-    padding: 10px;
+    align-items: center;
+    padding: 12px 16px;
     background: white;
     border: 1px solid #eee;
     border-radius: 8px;
     margin-bottom: 8px;
-    font-size: 16px;
+    font-size: 15px;
     color: #333;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.diary-item span:first-child {
+    font-weight: 500;
+    flex: 1;
 }
 </style>

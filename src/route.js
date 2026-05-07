@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 
 import index from './components/index.vue'
 import login from './components/login.vue'
@@ -9,10 +9,11 @@ import profile from './components/profile.vue'
 import historypage from './components/historypage.vue'
 import water from './components/water.vue'
 import nonepage from './components/nonepage.vue'
-
-import useUsers from './composables/useUsers'
-
-const { currentUser } = useUsers()
+import recepty from './components/recepty.vue'
+import receptydetail from './components/receptydetail.vue'
+import receptyinfo from './components/receptyinfo.vue'
+import receptyingredients from './components/receptyingredients.vue'
+import receptysteps from './components/receptysteps.vue'
 
 const routes = [
     { path: '/', name: 'index', component: index },
@@ -24,16 +25,47 @@ const routes = [
     { path: '/history', name: 'history', component: historypage, meta: { auth: true } },
     { path: '/water', name: 'water', component: water, meta: { auth: true } },
 
-    {path: "/:pathname(.*)", name:'nonepage', component:nonepage}
+    { path: '/recepty', component: recepty, name: 'recepty', meta: { auth: true } },
+
+    {
+        path: '/recepty/:id',
+        component: receptydetail,
+        name: 'recipe',
+        redirect: to => {
+            return `/recepty/${to.params.id}/description`
+        },
+        children: [
+            {
+                path: 'description',
+                component: receptyinfo,
+                name: 'recepty.description'
+            },
+            {
+                path: 'ingredients',
+                component: receptyingredients,
+                name: 'recepty.ingredients'
+            },
+            {
+                path: 'steps',
+                component: receptysteps,
+                name: 'recepty.steps'
+            }
+        ]
+    },
+
+    { path: '/:pathname(.*)', name: 'nonepage', component: nonepage }
 ]
 
 const router = createRouter({
-    history: createWebHistory(),
+    history: createWebHashHistory(),
     routes
 })
 
+
+import useUsers from './composables/useUsers'
+const { currentUser } = useUsers()
+
 router.beforeEach((to, from, next) => {
-    const { currentUser } = useUsers()
     if (to.meta.auth && !currentUser.value) {
         next({ name: 'login' })
     } else {

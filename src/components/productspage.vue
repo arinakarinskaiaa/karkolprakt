@@ -30,7 +30,6 @@ function add() {
     <div class="products-page">
         <h1>Список продуктов</h1>
 
-        <!-- Форма добавления -->
         <div class="add-form">
             <input v-model="name" placeholder="Название продукта" />
             <input v-model="calories" type="number" min="0" step="1" placeholder="Калории (ккал)"
@@ -39,7 +38,6 @@ function add() {
             <p v-if="caloriesError" class="error">{{ caloriesError }}</p>
         </div>
 
-        <!-- Список продуктов -->
         <div class="products-list">
             <div v-for="p in products" :key="p.id" class="product-item">
                 <span class="product-name">{{ p.name }}</span>

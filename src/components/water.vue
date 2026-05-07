@@ -13,7 +13,6 @@ const goal = computed(() => {
   return currentUser.value.waterGoal || 2000
 })
 
-// Фильтруем записи за сегодня
 const today = new Date().toISOString().slice(0, 10)
 
 const dailyWater = computed(() => {
@@ -43,7 +42,6 @@ function saveGoal() {
     return
   }
 
-  // Создаём поле waterGoal, если его нет
   if (!currentUser.value.waterGoal) {
     currentUser.value.waterGoal = num
   } else {
@@ -102,44 +100,26 @@ function removeWater(id) {
       </div>
 
       <div v-else class="goal-edit">
-        <input
-          v-model="tempGoal"
-          type="number"
-          min="100"
-          placeholder="Цель (мл)"
-          @keyup.enter="saveGoal"
-        />
+        <input v-model="tempGoal" type="number" min="100" placeholder="Цель (мл)" @keyup.enter="saveGoal" />
         <button @click="saveGoal">Сохранить</button>
         <button @click="isEditingGoal = false" class="btn-cancel">Отмена</button>
       </div>
     </div>
 
-    <!-- Прогресс-бар -->
     <div class="progress-bar">
       <div class="bar">
-        <div
-          class="fill"
-          :style="{ width: `${Math.min(totalWater / goal * 100, 100)}%` }"
-        ></div>
+        <div class="fill" :style="{ width: `${Math.min(totalWater / goal * 100, 100)}%` }"></div>
       </div>
       <p>{{ totalWater }} / {{ goal }} мл</p>
     </div>
 
-    <!-- Форма добавления воды -->
     <div class="add-water-form">
-      <input
-        v-model="amount"
-        type="number"
-        min="0"
-        placeholder="Объём (мл)"
-        @input="error = ''"
-      />
+      <input v-model="amount" type="number" min="0" placeholder="Объём (мл)" @input="error = ''" />
       <button @click="addWater">Добавить</button>
     </div>
 
     <p v-if="error" class="error">{{ error }}</p>
 
-    <!-- История за день -->
     <div v-if="dailyWater.length > 0" class="water-list">
       <div v-for="w in dailyWater" :key="w.id" class="water-item">
         <span>{{ w.amount }} мл</span>

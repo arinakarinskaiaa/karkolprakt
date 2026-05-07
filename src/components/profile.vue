@@ -48,7 +48,6 @@ function saveProfile() {
         <h2>Профиль пользователя</h2>
 
         <div v-if="currentUser" class="user-info">
-            <!-- Режим просмотра -->
             <div v-if="!isEdit" class="info-view">
                 <div class="profile-row">
                     <span class="label">Логин</span>
@@ -62,7 +61,6 @@ function saveProfile() {
                 <button @click="isEdit = true" class="btn-edit">Изменить профиль</button>
             </div>
 
-            <!-- Режим редактирования -->
             <div v-else class="info-edit">
                 <div class="edit-row">
                     <label>Логин *</label>

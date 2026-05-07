@@ -66,7 +66,6 @@ function formatDate(dateStr) {
     return new Date(dateStr).toLocaleDateString('ru-RU', options)
 }
 
-// Показываем/скрываем выпадающий список
 watch(searchQuery, () => {
     showDropdown.value = searchQuery.value.length > 0 && filteredProducts.value.length > 0
 })
@@ -109,21 +108,18 @@ function removeItem(id) {
     saveCurrentUser()
 }
 
-// Записи воды за выбранную дату
 const dailyWater = computed(() => {
-  return currentUser.value?.water?.filter(w => w.date === selectedDate.value) || []
+    return currentUser.value?.water?.filter(w => w.date === selectedDate.value) || []
 })
 
-// Общее количество воды за день
 const totalWater = computed(() => {
     if (!currentUser.value?.water) return []
 
-  return dailyWater.value.reduce((sum, w) => sum + w.amount, 0)
+    return dailyWater.value.reduce((sum, w) => sum + w.amount, 0)
 })
 
-// Цель по воде (из профиля пользователя или по умолчанию)
 const waterGoal = computed(() => {
-  return currentUser.value.waterGoal || 2000
+    return currentUser.value.waterGoal || 2000
 })
 
 function addWater(amount) {
@@ -164,7 +160,6 @@ function removeWater(id) {
         <h3>Калории: {{ dailyCalories.toFixed(0) }} ккал</h3>
     </div>
 
-    <!-- Карточки продуктов за день -->
     <div v-if="dailyItems.length === 0" class="empty">
         Нет записей на эту дату.
     </div>
@@ -177,7 +172,7 @@ function removeWater(id) {
                 <div class="product-info">
                     <span class="name">{{products.find(p => p.id == item.productId)?.name}}</span>
                     <span class="details">{{ item.grams }} г · {{((products.find(p => p.id == item.productId)?.calories
-                        || 0) * item.grams / 100).toFixed(0) }} ккал</span>
+                        || 0) * item.grams / 100).toFixed(0)}} ккал</span>
                 </div>
                 <button @click="removeItem(item.id)" class="btn-remove">×</button>
             </div>
@@ -223,13 +218,11 @@ function removeWater(id) {
             <p>{{ totalWater }} / {{ waterGoal }} мл</p>
         </div>
 
-        <!-- Кнопки быстрого добавления -->
         <div class="quick-add-water">
             <button @click="addWater(250)">+250 мл</button>
             <button @click="addWater(500)">+500 мл</button>
         </div>
 
-        <!-- История воды за день -->
         <div v-if="dailyWater.length > 0" class="water-list">
             <div v-for="w in dailyWater" :key="w.id" class="water-item">
                 <span>{{ w.amount }} мл</span>
@@ -425,100 +418,100 @@ button:hover {
 }
 
 .water-section {
-  margin-top: 20px;
-  padding: 16px;
-  background: #f0f8ff;
-  border-radius: 12px;
-  border: 1px solid #cce6ff;
+    margin-top: 20px;
+    padding: 16px;
+    background: #f0f8ff;
+    border-radius: 12px;
+    border: 1px solid #cce6ff;
 }
 
 .water-section h3 {
-  color: #0066cc;
-  margin-bottom: 10px;
-  font-size: 1.3em;
+    color: #0066cc;
+    margin-bottom: 10px;
+    font-size: 1.3em;
 }
 
 .progress-bar {
-  margin-bottom: 12px;
+    margin-bottom: 12px;
 }
 
 .bar {
-  width: 100%;
-  height: 16px;
-  background: #cce6ff;
-  border-radius: 8px;
-  overflow: hidden;
-  margin-bottom: 6px;
+    width: 100%;
+    height: 16px;
+    background: #cce6ff;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 6px;
 }
 
 .fill {
-  height: 100%;
-  background: #0099ff;
-  transition: width 0.3s ease;
+    height: 100%;
+    background: #0099ff;
+    transition: width 0.3s ease;
 }
 
 .quick-add-water {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 12px;
-  flex-wrap: wrap;
+    display: flex;
+    gap: 10px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
 }
 
 .quick-add-water button {
-  padding: 8px 12px;
-  background: #0066cc;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 14px;
-  cursor: pointer;
+    padding: 8px 12px;
+    background: #0066cc;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
 }
 
 .quick-add-water button:hover {
-  background: #0055aa;
+    background: #0055aa;
 }
 
 .water-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
 }
 
 .water-item {
-  display: flex;
-  align-items: center;
-  background: white;
-  padding: 6px 10px;
-  border: 1px solid #ddd;
-  border-radius: 16px;
-  font-size: 14px;
-  color: #333;
+    display: flex;
+    align-items: center;
+    background: white;
+    padding: 6px 10px;
+    border: 1px solid #ddd;
+    border-radius: 16px;
+    font-size: 14px;
+    color: #333;
 }
 
 .btn-remove {
-  background: #e60000;
-  color: white;
-  width: 22px;
-  height: 22px;
-  border: none;
-  border-radius: 50%;
-  font-size: 14px;
-  margin-left: 6px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    background: #e60000;
+    color: white;
+    width: 22px;
+    height: 22px;
+    border: none;
+    border-radius: 50%;
+    font-size: 14px;
+    margin-left: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .btn-remove:hover {
-  background: #cc0000;
+    background: #cc0000;
 }
 
 .empty-water {
-  font-style: italic;
-  color: #888;
-  font-size: 14px;
-  padding: 8px 0;
+    font-style: italic;
+    color: #888;
+    font-size: 14px;
+    padding: 8px 0;
 }
 </style>

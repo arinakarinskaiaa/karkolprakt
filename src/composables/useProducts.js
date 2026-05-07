@@ -24,10 +24,8 @@ const products = ref(JSON.parse(localStorage.getItem("products")) || [
     { id: 20, name: "Молоко", calories: 42 }
 ])
 
-// Поисковой запрос
 const searchQuery = ref('')
 
-// Фильтрация по названию продукта
 const filteredProducts = computed(() => {
     if (!searchQuery.value.trim()) {
         return products.value
