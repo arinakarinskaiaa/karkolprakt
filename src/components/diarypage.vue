@@ -176,6 +176,7 @@ const totalCalories = computed(() => {
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     border: 1px solid #eee;
+    overflow: hidden;
 }
 
 
@@ -193,6 +194,8 @@ const totalCalories = computed(() => {
     outline: none;
     background: white;
     transition: border-color 0.3s;
+    box-sizing: border-box;
+    display: block;
 }
 
 .search-input:focus {
@@ -204,6 +207,7 @@ const totalCalories = computed(() => {
     position: absolute;
     top: 100%;
     left: 0;
+    right: 0;
     width: 100%;
     background: white;
     border: 1px solid #ddd;
@@ -216,6 +220,7 @@ const totalCalories = computed(() => {
     padding: 0;
     z-index: 1000;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
 }
 
 .dropdown-list li {
@@ -245,8 +250,8 @@ const totalCalories = computed(() => {
 }
 
 .input-group {
-    flex: 1;
-    min-width: 140px;
+    flex: 1 1 0;
+    min-width: 0;
 }
 
 .input-group label {
@@ -260,6 +265,7 @@ const totalCalories = computed(() => {
 .input-group input,
 .input-group select {
     width: 100%;
+    max-width: 100%;
     padding: 12px;
     border: 2px solid #2e8b57;
     border-radius: 8px;
@@ -267,6 +273,8 @@ const totalCalories = computed(() => {
     outline: none;
     background: white;
     transition: border-color 0.3s;
+    box-sizing: border-box;
+    display: block;
 }
 
 .input-group input:focus,

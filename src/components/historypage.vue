@@ -194,13 +194,20 @@ function removeWater(id) {
         </div>
 
         <div class="form-row">
-            <input v-model="grams" type="number" min="0" placeholder="Граммы" @input="error = ''" />
-            <select v-model="selectedCategory">
-                <option value="breakfast">Завтрак</option>
-                <option value="lunch">Обед</option>
-                <option value="dinner">Ужин</option>
-                <option value="snack">Перекус</option>
-            </select>
+            <div class="input-group">
+                <label>Граммы</label>
+                <input v-model="grams" type="number" min="0" placeholder="Граммы" @input="error = ''" />
+            </div>
+
+            <div class="input-group">
+                <label>Приём пищи</label>
+                <select v-model="selectedCategory">
+                    <option value="breakfast">Завтрак</option>
+                    <option value="lunch">Обед</option>
+                    <option value="dinner">Ужин</option>
+                    <option value="snack">Перекус</option>
+                </select>
+            </div>
         </div>
 
         <button @click="addToDay">Добавить в день</button>
@@ -237,51 +244,84 @@ function removeWater(id) {
 
 <style scoped>
 h1 {
+    text-align: center;
     color: #2e8b57;
+    margin-bottom: 20px;
+    font-size: 2rem;
 }
 
 .date-selector {
+    text-align: center;
     margin: 20px 0;
+}
+
+.date-selector label {
+    font-size: 16px;
+    color: #555;
+    margin-right: 8px;
 }
 
 .date-selector input {
-    padding: 8px;
+    padding: 12px;
     border: 2px solid #2e8b57;
-    border-radius: 6px;
+    border-radius: 8px;
     font-size: 16px;
+    outline: none;
+    background: white;
+    transition: border-color 0.3s;
+    width: 200px;
+}
+
+.date-selector input:focus {
+    border-color: #2e8b57;
+    box-shadow: 0 0 0 3px rgba(46, 139, 87, 0.2);
+}
+
+h2 {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #555;
+    margin: 10px 0 20px;
 }
 
 .stats {
-    background: #f0f8f0;
-    padding: 15px;
-    border-radius: 8px;
     text-align: center;
-    color: #2e8b57;
-    font-weight: bold;
     margin: 20px 0;
 }
 
+.stats h3 {
+    color: #2e8b57;
+    font-size: 1.3rem;
+    font-weight: 500;
+}
+
 .add-form {
-    background: #f9f9f9;
+    max-width: 500px;
+    margin: 0 auto 30px;
     padding: 20px;
-    border-radius: 8px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     border: 1px solid #eee;
-    margin-bottom: 30px;
+    overflow: hidden;
 }
 
 .search-container {
     position: relative;
-    margin-bottom: 10px;
+    margin-bottom: 16px;
 }
 
 .search-input {
     width: 100%;
-    max-width: 400px;
     padding: 12px;
     font-size: 16px;
     border: 2px solid #2e8b57;
     border-radius: 8px;
     outline: none;
+    background: white;
+    transition: border-color 0.3s;
+    box-sizing: border-box;
+    display: block;
 }
 
 .search-input:focus {
@@ -293,8 +333,8 @@ h1 {
     position: absolute;
     top: 100%;
     left: 0;
+    right: 0;
     width: 100%;
-    max-width: 400px;
     background: white;
     border: 1px solid #ddd;
     border-top: none;
@@ -306,6 +346,7 @@ h1 {
     padding: 0;
     z-index: 1000;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
 }
 
 .dropdown-list li {
@@ -327,13 +368,45 @@ h1 {
     padding: 10px;
 }
 
-input[type="number"] {
-    padding: 12px;
+.form-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.input-group {
+    flex: 1;
+    min-width: 140px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+
+.input-group input,
+.input-group select {
     width: 100%;
-    max-width: 400px;
-    border: 2px solid #ccc;
+    max-width: 100%;
+    padding: 12px;
+    border: 2px solid #2e8b57;
     border-radius: 8px;
-    margin: 8px 0;
+    font-size: 16px;
+    outline: none;
+    background: white;
+    transition: border-color 0.3s;
+    box-sizing: border-box;
+    display: block;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+    border-color: #2e8b57;
+    box-shadow: 0 0 0 3px rgba(46, 139, 87, 0.2);
 }
 
 button {
@@ -344,18 +417,21 @@ button {
     border-radius: 8px;
     cursor: pointer;
     font-size: 16px;
-    transition: 0.3s;
+    transition: all 0.3s;
+    width: auto;
 }
 
 button:hover {
     background: #267c4a;
     transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .error {
     color: #e60000;
     font-size: 0.9rem;
     margin-top: 5px;
+    text-align: left;
 }
 
 .empty {
@@ -365,12 +441,21 @@ button:hover {
     padding: 20px;
     background: #f9f9f9;
     border-radius: 8px;
+    margin: 20px 0;
 }
 
-.items-grid {
-    display: grid;
-    gap: 10px;
-    margin-top: 20px;
+.category-section {
+    max-width: 500px;
+    margin: 30px auto 20px;
+    text-align: left;
+}
+
+.category-section h3 {
+    color: #2e8b57;
+    margin-bottom: 10px;
+    font-size: 1.3rem;
+    border-bottom: 2px solid #f0f8f0;
+    padding-bottom: 4px;
 }
 
 .product-card {
@@ -381,7 +466,10 @@ button:hover {
     background: white;
     border: 1px solid #eee;
     border-radius: 8px;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 8px;
+    font-size: 15px;
+    color: #333;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
 }
 
 .product-info {
@@ -389,7 +477,7 @@ button:hover {
 }
 
 .name {
-    font-weight: 600;
+    font-weight: 500;
     color: #000;
     display: block;
 }
@@ -411,24 +499,52 @@ button:hover {
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-left: 8px;
 }
 
 .btn-remove:hover {
     background: #cc0000;
 }
 
+.quick-links {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+}
+
+.link {
+    color: #2e8b57;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 14px;
+    border-bottom: 1px dashed #2e8b57;
+    padding-bottom: 2px;
+    transition: all 0.3s ease;
+}
+
+.link:hover {
+    color: #267c4a;
+    border-bottom: 1px solid #267c4a;
+    transform: translateY(-1px);
+}
+
 .water-section {
-    margin-top: 20px;
-    padding: 16px;
-    background: #f0f8ff;
+    max-width: 500px;
+    margin: 30px auto;
+    padding: 20px;
+    background: white;
     border-radius: 12px;
-    border: 1px solid #cce6ff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid #eee;
 }
 
 .water-section h3 {
     color: #0066cc;
     margin-bottom: 10px;
     font-size: 1.3em;
+    text-align: center;
 }
 
 .progress-bar {
@@ -454,6 +570,7 @@ button:hover {
     display: flex;
     gap: 10px;
     margin-bottom: 12px;
+    justify-content: center;
     flex-wrap: wrap;
 }
 
@@ -476,36 +593,25 @@ button:hover {
     flex-wrap: wrap;
     gap: 8px;
     margin-top: 8px;
+    justify-content: center;
 }
 
 .water-item {
     display: flex;
     align-items: center;
-    background: white;
+    background: #f0f8ff;
     padding: 6px 10px;
-    border: 1px solid #ddd;
+    border: 1px solid #cce6ff;
     border-radius: 16px;
     font-size: 14px;
     color: #333;
 }
 
-.btn-remove {
-    background: #e60000;
-    color: white;
+.water-item .btn-remove {
     width: 22px;
     height: 22px;
-    border: none;
-    border-radius: 50%;
     font-size: 14px;
     margin-left: 6px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.btn-remove:hover {
-    background: #cc0000;
 }
 
 .empty-water {
@@ -513,5 +619,6 @@ button:hover {
     color: #888;
     font-size: 14px;
     padding: 8px 0;
+    text-align: center;
 }
 </style>
